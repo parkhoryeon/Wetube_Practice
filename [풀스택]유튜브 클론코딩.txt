@@ -1,0 +1,283 @@
+# 깃 프로젝트 
+  git init
+  git-hub 레포지토리 생성 / Private이나 Public으로 설정
+  git remote add origin {저장소 URL}
+
+
+# 필수 소프트웨어 : 브라우저(chromium 기반의 브라우저), VisualStudioCode, NodeJS(nodejs.org), git, github, MongoDB
+
+# VSC 확장마켓 : Auto Rename Tag, Black Formatter, Community Material Theme, ESLint, gitignore, Korean Language Pack, Live Server,
+  Material Icon Theme, Material Theme, Material Theme Icons, Prettier, Python, SQLite Viewer, TabOut
+
+# NodeJS 란? : 크롬 V8 자바스크립트 엔진으로 빌드 된 자바스크립트 런타임
+  NodeJS는 브라우저 밖에서 돌아가는 자바스크립트.
+  더 이상 브라우저의 죄수가 아니다. 브라우저라는 감옥에 갖혀 있지 않고 자유이다.
+
+# npm 란? : NodeJS의 친구같은 존재
+  자바스크립트 언어를 위한 패키지 매니저
+  npm 과 nodeJS는 같이 사용해야 된다.(같이 설치가 된다.)
+  nodeJS와 상호작용을 할 수 있게 해준다.
+  yarn이라는 패키지 매니저도 존재하는데, npm과 yarn 이 둘 사이에는 차이가 거의 없다.
+  여러 곳에 있는 대단한 사람들이 작은 패키지를 만들어주는데, 우리가 이 패키지를 가져다 쓸 수가 있다.(개발을 편리하게 도움을 준다.)
+  서로를 연결 시켜주거나 다운로드 받을 수 있게 해준다.
+
+# npmjs.com/
+
+# 패키지 : 
+  express : npm install express
+
+# 프로젝트 생성 
+  1. 폴더 생성
+  2. package.json이라는 파일을 만들어야 한다. - npm init(npm이 package.json 만드는것을 도와준다.)
+  깃허브 연동이 되어있다면 package.json 안에서 license 밑에 아래의 코드가 추가된다.
+  // "bugs": {
+  //   "url": "Git-Hub 레포지토리 주소/issues"
+  // },
+  // "homepage": "Git-Hub 레포지토리 주소#readme"
+  // "repository": {
+  // "type": "git",
+  // "url": "git+Git-Hub 레포지토리주소.git"
+  // },
+
+# main이 뭐냐면, 프로젝트의 대표 파일이 뭔지 알려주는 것.
+  만들고 배포한 package를 다른 사람들이 설치하면 main을 사용.
+
+# scripts 란? : 실행하고 싶은 것을 말한다.
+  서버를 시작하는 script, css를 압축하는 script 등등 많은것에 이용을 할 수 있다.
+  ex : 
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "win": "node index.js"
+  },
+  $ npm run win 식으로 입력을 하면 'node index.js' 가 실행이 된다. 단! 프로젝트 폴더 안에서(package.json이 있는 위치에서 작동)
+
+
+# node index.js - index.js 를 실행시킨다. - 이거 대신에 package.json으로 실행.
+
+# 패키지 설치 : npm i {패키지이름} or  npm install {패키지이름} - 패키지 이름은 npm사이트에서 나오는 패키지 이름을 동일하게 작성.
+
+# 위와 같이 패키지를 생성하면 package-lock.json 과 node_modules가 생성이 된다.
+
+# node_modules 에는 내가 설치한 패키지와 그 패키지에 필요한 패키지들 모두가 연결되어 설치가 된다.
+
+# 설치를 할 때는 package.json 창을 닫고 설치하도록 한다. 설치이후에는 package.json 의존성 패키지에 추가가되기 때문에.
+
+# node_modules와 package-lock.json 파일을 지워도 내 프로젝트 폴더에 있는 'package.json'에 의존성만 잘 추가가되어 있다면
+  'npm i' or 'npm install'을 통해서 언제든 다시 생성할 수 있다. 우리에게 중요한 것은 'package.json' 인것!!
+
+# package-lock.json은 나의 패키지들을 안전하게 관리해준다. 패키지가 수정이 되었는지 해쉬값으로 체크
+
+# babel(babeljs.io) : nodeJS가 자바스크립트를 문제없이 이해하도록 변환해 준다. babel 사이트를 보고 설정파일 까지 추가 설정 및 생성.
+  babel로 컴파일하는 scripts 생성 후 사용.
+  "@babel/core": "^7.23.2",
+  "@babel/node": "^7.22.19",
+  "@babel/preset-env": "^7.23.2"
+  
+# nodemon : 파일이 수정되면 nodemon이 알아서 재시작을 한다.
+  "nodemon": "^3.0.1"
+
+# package.json 에서 devDependencies 는 개발자를 위한 패키지, 반대로 dependencies 는 프로젝트를 실행하기 위해 필요한 패키지.
+
+# npm install --save-dev {패키지이름} : devDependencies로 구분하고 설치. 
+
+# import express from "express"; : "express"라는 패키지를 express라는 이름으로 import 해온다.
+
+# express application을 만들고 싶다면 : 
+  import express from "express";
+  const app = express();
+  app.listen(port, callback);
+  이렇게 작성을 하면 된다.
+
+# app.get(route, middleCallback, finalCallback) : ex: app.get('/', callback)
+
+# Middleware는 request 와 response 사이에 존재한다.
+  브라우저가 request한 다음, 그리고 응답하기 전.
+
+# 미들웨어, 파이널웨어 등 모두를 컨트롤러라고 생각을 하면 되는데, 기본적으로 req, res, next 의 arguments가 들어간다.
+
+# next(); : 다음 컨트롤러 호출 / 관습적으로, 응답을 해주는 마지막 Controller에는 next를 사용하지 않는다.
+
+# res.end(); : 응답 종료
+
+# res.send('hello'); 
+
+# app.use() : 글로벌 미들웨어를 만들 수 있게 해준다. 어느 URL에도 작동하는 MiddleWare.
+
+# 주의해야할 점은 MiddleWare 를 use 하는게 먼저오고, 그 다음에 URL의 get이 와야한다.
+
+# express는 모든 것을 위에서 아래 순으로 실행을 시킨다. 
+
+# morgan 은 로깅에 도움이 되는 패키지(미들웨어 패키지 중 하나). morgan 옵션으로는 (combined, common, dev, short, tiny)
+
+# Router 생성 : express.Router();
+
+# import를 하기전에는 export를 진행해야 한다. 모든 파일은 모듈이기 때문에
+  import globalRouter from "./routers/globalRouter"; 
+  export default globalRouter;
+  export default 로는 한 가지 밖에 export 하지 못한다.
+
+# default로 export 할 때는 내가 원하는 어떤 이름으로 던지 임포트할 수 있다.
+  
+# 하지만 export const를 하게되면 실제 이름을 그대로 사용해야 한다.
+
+# Controller 와 Router는 분리가 되어야 한다.
+
+# /:id 'id'는 어떤 단어로 바꾸어도 상관이 없다. 중요한 것은 ":" 를 넣는것이다.
+  이렇게 표시하는건 express한테 이게 변수라는걸 알려주기 위해서.
+
+# console.log(req.params); : url 에서 요청받은 변수를 출력.
+
+# videoRouter.get("/upload", upload);
+  videoRouter.get("/:id", see);
+  위의 순서를 변경을 하게 되면
+  videoRouter.get("/:id", see);
+  videoRouter.get("/upload", upload);
+  request : localhost:4000/videos/upload 를 하게 되면 /upload 보다 :id(upload)로 인식을 하고 이동하게 된다.
+  위에를 먼저 보기 때문에.
+  
+# express 라우팅(참고 : https://expressjs.com/en/guide/routing.html)
+
+# 정규식은 문자열로부터 특정 정보를 추출해내는 방법.
+  정규식은 모든 프로그래밍 언어에 존재.
+
+# 숫자만 받는 정규식 "/:id(\\d+)"
+
+# HTML을 리턴하는데는 두 가지 옵션이 있다.
+  1. res.send("<h1>문자열</h1>") - 그냥 HTML의 문자열을 사용해서 보내는 방법
+
+# Pug : 웹 개발에서 사용되는 템플릿 엔진 중 하나이다.
+  장점 :
+  1. 간결한 문법
+  2. 가독성
+  3. 재사용 가능한 블록
+  4. 변수 및 제어문
+  5. 템플릿 상속
+
+# Pug 사용방법
+
+# 1. Pug 설치 : npm install Pug
+# 2. 다음으로는 Express에게 html 헬퍼로 pug를 쓰겠다고 말하는것이다.
+  app.set("view engine", "pug");
+# 3. 실제로 pug 파일을 생성한다.
+
+# *.pug 파일을 그대로 유저에게 보내는것은 아니고, 파일을 pug로 보내고
+  평범한 html로 변환한다.
+
+# 현재 작업 디렉토리 확인 방법 console.log(process.cwd());
+
+# 기본적으로 express는 cwd + /views 에서 pug파일을 찾는다.
+  (하지만 우리는 cwd/src/views 에 위치한다.)
+
+# cwd는 어디서 node.js를 부르고, 어디서 서버를 기동하고 있는지.
+
+# 누가 서버를 기동할까? : package.json
+  package.json이 node.js를 실행하고 있다.
+
+# 현재 작업 디렉토리는 노드를 시작하는 디렉토리이다!
+
+# Pug에서 자바스크립트를 사용하는 방법 '#{}'
+  템플릿에 어떤 자바스크립트 코드라도 넣을 수 있다.
+
+# 파일명은 띄어쓰기가 없어야하고, 전부 소문자로 해야한다.
+
+# 공통적인 HTML(footer...) 등은 따로 footer.pug를 생성하고 include 시킨다.
+  들어갈 곳에 include ./partials/footer.png(경로).
+
+# base.pug 를 만들고 확장시킨다. 확장방법 extends base.pug
+
+# block 이름: block을 만들어서 페이지마다 다른 내용을 입력해서 넣을 수 있다.
+  base.pug : block content
+  home.pug : extends base.pug
+             block content
+               h1 Home!
+
+# 블록은 확장한 템플릿 안에 내용을 넣을 수 있는 창문 또는 문 같은것이다.
+
+# res.render 는 두가지를 받는다. ex.return res.render("home", { pageTitle: "home", potato: "tomato" });
+  home.pug : #{potato}로 "tomato"를 받는다.
+
+# MVP.css : HTML 태그에 몇 가지 기본 스타일들을 입혀준다. 
+  임시방편, 단지 못생긴게 싫기 때문에 임시방편으로 조금 이쁘게 만들기 위해서.
+  (https://andybrewer.github.io/mvp/)
+  <link rel="stylesheet" href="https://unpkg.com/mvp.css"> 
+
+# h1=pageTitle : 만일 이렇게 h1에다 =을 붙이고 variable을 쓰면 text가 아닌 variable로 인식된다.
+  h1=pageTitle 이거는 h1 #{pageTitle} 과 동일하다.
+  h1= 과 같이, 태그에 하나의 variable 값만 집어넣는 경우라면, 이렇게 하면 된다.
+
+# if / else if 문
+  if fakeUser.loggedIn
+    li 
+      a(href="/logout") Log out
+  else
+    li 
+      a(href="/login") Login
+
+# each 반복문(배열을 가지고 있는 변수) / array가 필요하다!
+  each video in videos
+    li=video
+  else
+
+# mixin은 partial이긴 한데 데이터를 받을 수 있는 partial을 말한다.
+  HTML을 return 해주는 일종의 function
+
+# mixin video(info)
+    div 
+        h4=info.title
+        ul 
+            li #{info.rating}/5.
+            li #{info.comments} comments.
+            li Posted #{info.createdAt}.
+            li #{info.views} views.
+  ##
+  each video in videos
+        +video(video)
+
+# Iteration / Mixin
+
+# 첫 번째 방법: a(href="/videos/" + video.id)=video.title
+  두 번째 방법: 자바스크립트 template string을 사용. a(href=`/videos/${video.id}`)=video.title
+
+# #{} 이 기호는 attribute에서는 사용할 수 없다. href, class, id 등등
+
+# 절대경로: root 경로에 + 
+
+# 상대경로: 현재 경로에 +
+
+# form에서 기본값으로 method는 GET
+
+# get 방식을 쓰는 form은 어떨 때 사용하는 것일까? 네이버나 구글에서 검색을 할때 주소창에 포함이 될것이다.
+
+# post 방식은 파일을 보내거나, database에 있는 값을 바꾸는 뭔가를 보낼 때 사용한다.
+
+# videoRouter.get() 과 videoRoute.post()는 각 method 방식에 따른 것만 설정할 수 있다.
+  videoRouter.route("/:id(\\d+)/edit").get(getEdit).post(postEdit) -- 아래 2Line을 1Line으로 표현 하는 방법.
+  videoRouter.get("/:id(\\d+)/edit", getEdit);
+  videoRouter.post("/:id(\\d+)/edit", postEdit);
+
+# res.redirect()는, 브라우저가 redirect(자동으로 이동) 하도록 하는 것이다.
+
+# Express application은 form을 어떻게 다루는지 모른다. 아직은! application에게 form을 처리하고 싶다고 말해야 한다.
+  미들웨어는 항상 router 이전에 위치 해야한다.
+
+# Express 에게 form의 value들을 이해할 수 있도록 하고, 자바스크립트 형식으로 변형.
+  app.use(express.urlencoded({ extended: true }));
+
+# req.body.(input의 name 값)
+
+# MongoDB : MongoDB에 저장하는 것들은 JSON-like-document 이다. 그러므로 행으로 된 데이터를 저장할 필요가 없다.
+  document-based database 이다.
+
+# chocolatey (https://chocolatey.org/) : Windows 운영체제에서 소프트웨어 패키지를 관리하고 자동화하는 패키지 관리자이다. 
+  간단한게 script 언어로 설치 등이 가능하다. 
+
+# mongoose: 매우 중요한 package라고 할 수 있다. mongoDB를 쓰기를 원하고, 그 작업을 자바스크립트를 써서 하고 싶을 경우 사용.
+  Node.js 기반의 웹 어플리케이션 및 서버에서 MongoDB와 상호작용하기 위한 Object Data Modeling(ODM) 도구이자 라이브러리이다.
+  node.js에서 mongoDB와 상호작용하기 위해서 mongoose를 사용한다.
+
+# mongoDB가 정상적으로 설치되어있으면 터미널에 mongod를 입력하면 어지러운 구문이 표시되어야 한다.
+  mongod 명령어가 실행이 되지 않는다면 환경변수 path에 C:\Program Files\MongoDB\Server\7.0\bin 추가.
+
+#  mongo
+
+
