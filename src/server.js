@@ -1,3 +1,4 @@
+import "./db";  // db.js 자체를 import
 import express from "express";
 import morgan from "morgan";
 import globalRouter from "./routers/globalRouter"; 
