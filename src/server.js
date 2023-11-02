@@ -1,4 +1,3 @@
-import "./db";  // db.js 자체를 import
 import express from "express";
 import morgan from "morgan";
 import globalRouter from "./routers/globalRouter"; 
@@ -6,7 +5,7 @@ import userRouter from "./routers/userRouter";
 import videoRouter from "./routers/videoRouter";
 
 
-const PORT = 4000;
+
 
 // Create  express App/Server
 const app = express();
@@ -28,15 +27,12 @@ app.use(logger);
 // Express 에게 form의 value들을 이해할 수 있도록 하고, 자바스크립트 형식으로 변형.
 app.use(express.urlencoded({ extended: true }));
 
-// Root Router
+// Router
 app.use("/", globalRouter);
 app.use("/users", userRouter);
 app.use("/videos", videoRouter);
 
+export default app;
 
-const handleListening = () => console.log(`Server listening on http://localhost:${PORT}`);
-
-// Running App/Server listen(port, callback)
-app.listen(PORT, handleListening)
 
 

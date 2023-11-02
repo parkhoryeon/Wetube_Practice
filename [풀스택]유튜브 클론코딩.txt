@@ -300,8 +300,63 @@
   nvm install 20.9.0: 원하는 버전 설치
   nvm use 20.9.0 사용할 버전 선택
 
-const db = mongoose.connection;
-db.on("error", ) : 여러번 계속 발생시킬 수 있다. 클릭같은 이벤트
-db.once("",) : 오로지 한 번만 발생하는 이벤트.
+# const db = mongoose.connection;
+  db.on("error", ) : 여러번 계속 발생시킬 수 있다. 클릭같은 이벤트
+  db.once("",) : 오로지 한 번만 발생하는 이벤트.
 
+# src/models/video.js 에 mongoose import 후
+  비디오 스키마(데이터의 생김새) 작성
+  mongoose.model("모델이름", 모델스키마)
 
+# video.find() : 콜백함수 와 프로미스 콜백이 제거되었다고 한다.
+
+# export const home = async(req, res) => {
+    const videos = await Video.find({});
+    return res.render("home", { pageTitle: "Home", videos: videos });
+  };
+  await을 find 앞에 적으면 find는 네가 callback 을 필요로 하지 않는다는걸 알게 된다.
+  그렇기 find는 찾아낸 비디오를 바로 출력해줄것이다.
+  에러를 출력하기 위해서는 try / catch 를 사용할 것이다.
+  await이 대단한 이유는 database 를 기다려주기 때문이다.(databse 에게 결과값을 받을 때까지.)
+
+# 코딩 규칙상 await은 function 안에서만 사용이 가능하다. function이 비동기일 경우 
+
+# split라 불리는 function.
+  split 은 string 들을 분리하는 기능
+  splitter 또는 separator 가 그 분리의 기준이 된다.
+
+# "hello,food,totally,delis".split(",") --> ['hello', 'food', 'totally', 'delis']
+
+# "hello,food,totally,delis".split(",").map((word) => { return `#${word}`}) --> ['#hello', '#food', '#totally', '#delis']
+
+# monngose가 id를 부여해준다.(랜덤한 id)
+  ⭐ video :  {
+    title: 'Video 1',
+    description: 'Best JavaScript',
+    createdAt: 2023-11-02T06:33:10.532Z,
+    hashtags: [ '#hello', '#how', '#are', '#you' ],
+    meta: { views: 0, rating: 0 },
+    _id: new ObjectId('654342a6544de9cd9e168a94')
+  }
+
+# 스키마에서 데이터형식이 String인 상태에 number 데이터를 넣어도 문제없이 String으로 변환해준다.
+  데이터형식이 Number인 상태에 String 데이터를 넣으면 제외하고 데이터가 생성이 된다.
+
+# .save() : 는 promise를 return 해준다.
+  이 말은 save 작업이 끝날 때까지 기다려줘야 한다는 것.
+
+# show dbs : DB 조회.
+  use wetube : DB 선택.
+  show collections : 테이블(?) 조회.
+  help : 도움.
+  db.videos.find() 
+
+# video object를 만드는 방법(2가지)
+  1. object 생성
+  2. await Video.create({})
+
+# mongoDB가 생성하는 ID 의 정규식 : /:id([0-9a-f]{24})
+
+# .findOne(조건) : 조건에 만족하는 것을 찾는다.
+
+# .findById(id) : id에 만족하는 것을 찾는다.
