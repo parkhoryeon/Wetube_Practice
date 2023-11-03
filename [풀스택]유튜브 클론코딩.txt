@@ -360,3 +360,13 @@
 # .findOne(조건) : 조건에 만족하는 것을 찾는다.
 
 # .findById(id) : id에 만족하는 것을 찾는다.
+
+# findByIdAndUpdate(id, 업데이트 할 정보 혹은 내용) : 
+
+# 업데이트 하는 방법 2가지
+  1. video.title = title 방식.
+  2. findByIdAndUpdate() 활용.
+
+# posetEdit 에서 video object를 검색 할 필요가 없다는 소리이다. 필터에 만족하는 데이터를 확인하고 결과를 출력.
+
+# Model.exists() : exists()는 ID를 받지 않고 filter를 받는다. 
