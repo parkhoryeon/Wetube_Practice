@@ -6,3 +6,5 @@ block content
         small #{video.createdAt}
     //- h3 #{video.views} #{video.views === 1 ? "view" : "views"}
     a(href=`${video.id}/edit`) Edit Video &rarr;
+    br
+    a(href=`${video.id}/delete`) Delete Video &rarr;

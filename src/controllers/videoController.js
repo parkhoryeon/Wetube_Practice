@@ -3,11 +3,11 @@ import Video from "../models/video.js";
 
 export const home = async(req, res) => {
     try {
-        const videos = await Video.find({});
-        console.log("⭐ videos : ", videos);
+        const videos = await Video.find({}).sort({createdAt: "desc"});
+        console.log("⭐ (home)videos : ", videos);
         return res.render("home", { pageTitle: "Home", videos: videos });
     } catch(error) {
-        return res.render("❌ Server-Error", { error });
+        return res.render("❌ (home)Server-Error", { error });
     };
 };
 export const watch = async(req, res) => {
@@ -38,9 +38,7 @@ export const postEdit = async(req, res) => {
     await Video.findByIdAndUpdate(id, {
         title: title,
         description: description,
-        hashtags: hashtags
-            .split(",")
-            .map((word) => { return word.startsWith('#') ? word : `#${ word }`})
+        hashtags: Video.formatHashtags(hashtags),
     });
     return res.redirect(`/videos/${id}`);
 };
@@ -55,15 +53,35 @@ export const postUpload = async(req, res) => {
         const video = new Video({
             title: title,
             description: description,
-            hashtags: hashtags.
-                split(",")
-                .map((word) => { return word.startsWith('#') ? word : `#${ word }`})
+            hashtags: Video.formatHashtags(hashtags),
         });
         await video.save();
-        console.log(`⭐ Saved Video : `, await video.save());
+        console.log(`⭐ (postUpload)Saved Video : `, video);
         return res.redirect("/");
     } catch(error) {
-        console.log(`❌ Server-Error : \n${ error }`);
+        console.log(`❌ (postUpload)Server-Error : \n${ error }`);
         return res.render("Upload", { pageTitle: "Upload Video", errorMessage: error._message });
     }
+};
+
+export const deleteVideo = async(req, res) => {
+    const id = req.params.id;
+    await Video.findByIdAndDelete(id);
+    // delete video
+    return res.redirect("/");
+};
+
+
+export const search = async(req, res) => {
+    const keyword = req.query.keyword;
+    console.log('⭐ Should search for ', keyword)
+    if(keyword) {
+        const videos = await Video.find({
+            title: {
+                $regex: new RegExp(keyword, "i"),
+            },
+        })
+        return res.render("Search", { pageTitle: "Search", videos: videos })
+    }
+    return res.render("Search", { pageTitle: "Search" });
 };

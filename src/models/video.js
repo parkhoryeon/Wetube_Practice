@@ -1,5 +1,7 @@
 import mongoose from "mongoose";
 
+// export const formatHashtags = (hashtags) =>
+//     hashtags.split(",").map((word) => (word.startsWith("#") ? word : `#${word}`))
 
 /** 비디오 스키마(데이터의 생김새) */
 const videoSchema = new mongoose.Schema({
@@ -11,7 +13,17 @@ const videoSchema = new mongoose.Schema({
         views: { type: Number, default: 0, required: true },
         rating: { type: Number, default: 0, required: true }
     },
-})
+});
+
+videoSchema.static('formatHashtags', function(hashtags) {
+    return hashtags.split(",").map((word) => (word.startsWith("#") ? word : `#${word}`))
+});
+
+// videoSchema.pre('save', async function() {
+//     this.hashtags = this.hashtags[0]
+//         .split(",")
+//         .map((word) => { return word.startsWith('#') ? word : `#${ word }`})
+// })
 
 /** Video 모델 생성 / mongoose와 model 연결 */
 const Video = mongoose.model("Video", videoSchema);

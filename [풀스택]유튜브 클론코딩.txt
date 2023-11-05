@@ -370,3 +370,18 @@
 # posetEdit 에서 video object를 검색 할 필요가 없다는 소리이다. 필터에 만족하는 데이터를 확인하고 결과를 출력.
 
 # Model.exists() : exists()는 ID를 받지 않고 filter를 받는다. 
+
+# 영상을 생성하거나 업데이트 하기 전에 작동할 function의 필요성.
+
+# mongoose에도 미들웨어가 존재한다. 중요한 것은 무조건 model이 생성되기 전에 만들어야 한다.
+  videoSchema.pre('save', async function() {
+    this.hashtags = this.hashtags[0]
+        .split(",")
+        .map((word) => { return word.startsWith('#') ? word : `#${ word }`})
+  })
+
+# Model.findByIdAndDelete()
+
+# delete와 remove의 차이점? 대부분의 경우에는 delete를 사용한다.
+
+# form 에서 get으로 쿼리를 제출하면 controller에서는 req.query.keyword name 값 // 로 받을 수 있다.
