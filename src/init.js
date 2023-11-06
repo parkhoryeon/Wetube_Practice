@@ -1,5 +1,6 @@
 import "./db";  // db.js 자체를 import
-import "./models/video";
+import "./models/Video";
+import "./models/User";
 import app from "./server";
 
 const PORT = 4000;

@@ -385,3 +385,42 @@
 # delete와 remove의 차이점? 대부분의 경우에는 delete를 사용한다.
 
 # form 에서 get으로 쿼리를 제출하면 controller에서는 req.query.keyword name 값 // 로 받을 수 있다.
+
+# password가 그냥 String으로 저장되서 DB에서 조회가 가능하다면 굉장히 위험한것이다. password 해싱이 필요하다.
+  해싱은 일방향 함수
+  bcrypt.hash(this.password, 5);
+
+# 해싱할 때 사용할 것은 bcrypt 라는 것. 
+
+# 계정을 생성할 때 정상적으로 생성이 되지 않아도 200 상태코드를 반환해서 브라우저에서는 비밀번호 저장을 묻는다 사용자에게
+  그러기 위해서 400 상태코드를 반환해줘야 한다. 
+  res.status(400).render()
+
+# 해싱한 암호를 비교
+  bcrypt.compare(password, user.password);
+
+# 로그인 할 때, 유저가 존재하는지 확인하고, 패스워드가 일치하는지 확인한다.
+
+# 둘째로 유저를 기억하게 만들려면(쿠키와 세션에 대한 이해가 필요.)
+
+# Session : 백엔드와 브라우저 간에 어떤 활동을 했는지 기억하는 것을 말한다.
+  브라우저와 백엔드 사이의 memory, history 같은 것.
+  그런데 이게 작동하려면 백엔드와 브라우저가 서로에 대한 정보를 가지고 있어야 한다.
+  왜냐면 로그인 페이지에서 HTTP 요청을 하면 요청이 처리되고 끝나게 되는데, 그 이후로는 백엔드가 아무 것도 할 수 없다.
+  유저가 로그인 할 때 유저한테 어떤 텍스트를 준다. 아직은 이게 뭔지 모르지만 유저가 누군인지 알 수 있게 해주는 무언가.
+  그리고 유저한테는 무언가를 요청할 때마다 그 텍스트를 같이 보내달라고 할것이다.
+
+# express-session : 설치 npm i express-session
+  이 미들웨어는 express에서 세션을 처리할 수 있게 해준다.
+  설치 후 import session from "express-session";
+  app.use(session({
+    secret: "Hello!",
+    resave: true,
+    saveUninitialized: true,
+  }))  -- 라우터 이전에 작성.
+  미들웨어가 사이트로 들어오는 모두를 기억하게 될것이다.
+
+
+
+
+
