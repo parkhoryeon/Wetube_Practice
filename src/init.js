@@ -1,3 +1,4 @@
+import "dotenv/config";
 import "./db";  // db.js 자체를 import
 import "./models/Video";
 import "./models/User";

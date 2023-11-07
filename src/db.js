@@ -1,11 +1,7 @@
 import mongoose from "mongoose";
 
 /** mongoose 와 mongodb 연결1 */
-mongoose.connect("mongodb://127.0.0.1:27017/wetube",
-// ??_??
-// useNewUrlParser: true,
-// userUnifiedTopology: true,
-);
+mongoose.connect(process.env.DB_URL);
 
 /** mongoose 와 mongodb 연결2 */
 const db = mongoose.connection;
