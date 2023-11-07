@@ -63,7 +63,7 @@ export const startGithubLogin = (req, res) => {
     };
     const params = new URLSearchParams(config).toString();
     const finalUrl = `${baseUrl}?${params}`;
-    // console.log('FINAL_URL : ', finalUrl);
+    // console.log('START_FINAL_URL : ', finalUrl);
     return res.redirect(finalUrl);
 };
 export const finishGithubLogin = async(req, res) => {
@@ -75,7 +75,7 @@ export const finishGithubLogin = async(req, res) => {
     }
     const params = new URLSearchParams(config).toString();
     const finalUrl = `${baseUrl}?${params}`;
-    // console.log('FINAL_URL : ', finalUrl);
+    // console.log('FINISH_FINAL_URL : ', finalUrl);
     const tokenRequest = await(
         await fetch(finalUrl, {
             method: "POST",
@@ -83,14 +83,30 @@ export const finishGithubLogin = async(req, res) => {
                 Accept: "application/json",
             },
         })).json();
-    // console.log(json);
+    console.log("tokenRequest : ", tokenRequest);
     // res.send(JSON.stringify(json));
     if("access_token" in tokenRequest) {
         const access_token = tokenRequest.access_token;
-        const userRequest = await(await fetch("https://api.github.com/user", {
-            Authorization: `token ${access_token}`
+        const apiUrl = "https://api.github.com";
+        const userData = await(await fetch(`${apiUrl}/user`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${access_token}`
+            }
         })).json();
-        console.log(userRequest);
+        console.log(userData);
+        const emailData = await(await fetch(`${apiUrl}/user/emails`, {
+            method: "GET",
+            headers: {
+                Authorization: `Bearer ${access_token}`
+            }
+        })).json();
+        const email = emailData.find(
+            (email) => email.primary === true && email.verified === true
+        );
+        if(!email) {
+            return res.redirect("/login");
+        }
     } else {
         return res.redirect("/login");
     }
