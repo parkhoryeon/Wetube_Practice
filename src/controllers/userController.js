@@ -100,7 +100,7 @@ export const finishGithubLogin = async(req, res) => {
                     Authorization: `Bearer ${access_token}`
                 }
             })).json();
-            // console.log(userData);
+            console.log(userData);
             const emailData = await(await fetch(`${apiUrl}/user/emails`, {
                 method: "GET",
                 headers: {
@@ -126,7 +126,7 @@ export const finishGithubLogin = async(req, res) => {
                         password: "",
                         socialOnly: true,
                         whereLogin: "Github",
-                        location: userData.location,
+                        location: userData.location ? userData.location : "Unknown",
                     });
                 } 
                 req.session.loggedIn = true;
@@ -212,13 +212,27 @@ export const finishNaverLogin = async(req, res) => {
 
         
         
-export const edit = (req, res) => {
-    res.send("Edit User");
+export const getEdit = (req, res) => {
+    return res.render("edit-profile", { pageTitle: "Edit Profile" })
+}
+export const postEdit = async(req, res) => {
+    // Case 1
+    // const id = req.session.user._id;
+    // Case 2
+    const { session: { user: { _id } } } = req;
+    const { name, email, username, location } = req.body;
+    await User.findByIdAndUpdate(id, {
+        name: name,
+        email: email,
+        username: username,
+        location: location 
+    })
+    return res.render("edit-profile")
+}
+export const see = (req, res) => {
+    res.send("See User");
 }
 export const logout = (req, res) => {
     req.session.destroy();
     return res.redirect("/");
-}
-export const see = (req, res) => {
-    res.send("See User");
 }

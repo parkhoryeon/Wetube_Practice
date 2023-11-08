@@ -1,0 +1,10 @@
+extends base.pug
+//- include mixins/video.pug
+
+block content 
+    form(method="POST")
+        input(type="text", name="name", value=loggedInUser.name, placeholder="Name", required)
+        input(type="email", name="email", value=loggedInUser.email, placeholder="Email", required)
+        input(type="text", name="username", value=loggedInUser.username, placeholder="Username", required)
+        input(type="text", name="location", value=loggedInUser.location, placeholder="Location", required)
+        input(type="submit", value="Update Profile")

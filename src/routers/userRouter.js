@@ -1,5 +1,6 @@
 import express from "express";
-import { edit, logout, see, startGithubLogin, finishGithubLogin, startNaverLogin, finishNaverLogin, thirdNaverLogin } from "../controllers/userController";
+import { edit, logout, see, startGithubLogin, finishGithubLogin, startNaverLogin, finishNaverLogin, thirdNaverLogin, getEdit, postEdit } from "../controllers/userController";
+import { protectorMiddleware, publicOnlyMiddleware } from "../middlewares";
 
 /**
  * User Router
@@ -7,12 +8,12 @@ import { edit, logout, see, startGithubLogin, finishGithubLogin, startNaverLogin
  */
 const userRouter = express.Router();
 
-userRouter.get("/logout", logout);
-userRouter.get("/edit", edit);
-userRouter.get("/github/start", startGithubLogin);
-userRouter.get("/github/finish", finishGithubLogin);
-userRouter.get("/naver/first", startNaverLogin);
-userRouter.get("/naver/second", finishNaverLogin);
+userRouter.get("/logout", protectorMiddleware, logout);
+userRouter.route("/edit").all(protectorMiddleware).get(getEdit).post(postEdit);
+userRouter.get("/github/start", publicOnlyMiddleware, startGithubLogin);
+userRouter.get("/github/finish", publicOnlyMiddleware, finishGithubLogin);
+userRouter.get("/naver/first", publicOnlyMiddleware, startNaverLogin);
+userRouter.get("/naver/second", publicOnlyMiddleware, finishNaverLogin);
 userRouter.get(":id", see);
 
 export default userRouter;
