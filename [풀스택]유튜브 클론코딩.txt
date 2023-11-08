@@ -526,3 +526,10 @@
 # 우린 Github에 user를 보내고 user가 Github에서 "예"라고 하면 Github는 코드를 준다.
   그리고 그 코드를 가지고 access_token으로 바꿨다.
   그럼 access_token으로 Github API를 사용해 user 정보를 가져온다.
+
+# Github 로그인 같은 소셜 로그인을 할 때, 만일 너가 이 email에 접근 권한이 있다는 게 증명이 된다면
+  즉 password가 있거나 Github의 email이 verified 된거라면 너가 email 주인이라는 뜻이니까 널 로그인 시켜 줄 수 있어
+  그래서 primary이면서 verified된 email을 찾는거야. 두 개 다 중요!
+  예를 들어 Github login으로 계정을 만든 user 있을 때 즉, email은 있지만 password가 없는 경우
+  이럴 때는 로그인 화면에서 user에게 이렇게 말해야 되겠지. "email은 있는데 password는 없어"라고
+  이건 그들이 Github으로 로그인해야 한다는 뜻이야.
