@@ -2,9 +2,18 @@ extends base.pug
 //- include mixins/video.pug
 
 block content 
-    form(method="POST")
+    if errorMessage 
+        span #{errorMessage}
+    if loggedInUser.avatarUrl
+        img(src="/" + loggedInUser.avatarUrl, alt="Avatar Image", width="100", height="100")
+    form(method="POST" enctype="multipart/form-data")
+        label(for="avatar") Avatar
+        input(type="file" name="avatar" id="avatar" accept="image/*")
         input(type="text", name="name", value=loggedInUser.name, placeholder="Name", required)
         input(type="email", name="email", value=loggedInUser.email, placeholder="Email", required)
         input(type="text", name="username", value=loggedInUser.username, placeholder="Username", required)
         input(type="text", name="location", value=loggedInUser.location, placeholder="Location", required)
         input(type="submit", value="Update Profile")
+        if !loggedInUser.socialOnly
+            hr
+            a(href="/users/change-password") Change Password &rarr;

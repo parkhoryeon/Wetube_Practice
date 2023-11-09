@@ -46,6 +46,7 @@ export const getUpload = (req, res) => {
     return res.render("Upload", { pageTitle: "Upload Video" });
 };
 export const postUpload = async(req, res) => {
+    const file = req.file;
     const title = req.body.title;
     const description = req.body.description;
     const hashtags = req.body.hashtags;
@@ -53,6 +54,7 @@ export const postUpload = async(req, res) => {
         const video = new Video({
             title: title,
             description: description,
+            fileUrl: file.path,
             hashtags: Video.formatHashtags(hashtags),
         });
         await video.save();

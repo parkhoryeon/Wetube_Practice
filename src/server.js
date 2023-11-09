@@ -41,7 +41,10 @@ app.use(session({
     })
 );
 
+// 모든 템플릿에서 사용할 전역 변수를 위한 Middleware
 app.use(localsMiddleware)
+
+app.use("/uploads", express.static("uploads"));
 
 // Router
 app.use("/", rootRouter);

@@ -533,3 +533,65 @@
   예를 들어 Github login으로 계정을 만든 user 있을 때 즉, email은 있지만 password가 없는 경우
   이럴 때는 로그인 화면에서 user에게 이렇게 말해야 되겠지. "email은 있는데 password는 없어"라고
   이건 그들이 Github으로 로그인해야 한다는 뜻이야.
+
+# Profile Edit을 했는데 업데이트가 적용이 안되는 부부은 프론트엔드는 session으로부터 정보를 얻기 때문이다.
+  session은 로그인 할 때 한 번만 작성되고 있기 때문이다. 로그인 하고 나서는 session을 건드리지 않기 때문에.
+  로그인 했을 때의 user가 그대로 남아있는거다. 그래서 DB에 있는 user 정보를 업데이트해도, session은 업데이트 되지 않는거다.
+  한 마디로, session을 업데이트 해주면 된다는거다.
+  req.session.user = {
+        ...req.session.user  // req.session.user안에 있는 내용을 전해주는 것이다. 첫줄에 작성 아래 내용이 덮어쓸거니깐.
+        name: name,
+        email: email,
+        username: username,
+        location: location,
+    }
+
+# 기본적으로 findByIdAndUpdate는 update 되기 전의 데이터를 return 해준다.
+  new: true 를 설정해주면 findByIdAndUpdaterk 업데이트된 데이터를 return 해줄거다.
+
+# label의 for 속성에는 연결되는 input 요소의 id가 들어간다.
+
+# input 타입이 file 인 것에는 accept 라는 속성이 존재하고 accept="image/*" 를 추가하면 이미지들만 받을 수 있다.
+
+# multer는 우리가 파일을 업로드 할 수 있게 해준다.
+  npm i multer
+  form에다가 enctype="multipart/form-data"를 추가해준다.
+  이 말은 우리의 form이 다르게 encode 될 거란 의미이다.
+
+# // 사용자가 보낸 파일을 uploads 폴더에 저장하도록 설정된 middleware.
+  export const uploadFiles = multer({
+      dest: "uploads/"
+  })
+
+  userRouter
+    .route("/edit")
+    .all(protectorMiddleware)
+    .get(getEdit)
+    .post(uploadFiles.single("avatar"), postEdit);
+  uploadFiles.single이 하는 역할은 template의 input에서 오는 avatar파일을 가지고
+  파일을 업로드하고 uploads 폴더에 저장할거야.
+  그리고 다음 controller인 postEdit에 그 파일의 정보를 전달하는거지
+  좋은 소식은, 이렇게 하면 request에 req.file이 추가 된다는 것이다.
+
+# DB에는 파일을 저장하는게 아닌 파일의 위치만 저장을 하는것이다.
+
+# uploads 디렉토리에 있는 이미지가 계정편집에 나타나지 않는 경우는, 브라우저가 uploads 폴더에 있는
+  내용을 볼 수 있게 해줘야 하는 상황이다.
+  브라우저가 서버에 있는 파일에 접근할 수없으니까 우리가 브라우저한테 어디로 가야 하는지 얘기해줘야 해
+  브라우저가 서버의 어떤 폴더로든 갈 수 있다고 생각해봐. 보안상 좋지 않겠지?
+  그래서 우리가 브라우저가 어떤 페이지와 폴더를 볼 수 있는지 알려줘야해.
+  그러기 위해서, static files serving 이라는걸 활성화 할거야.
+  폴더 전체를 브라우저에게 노출 시킨다는 의미야.
+
+# 문제점:
+  1. 파일을 서버에 저장한다. 서버는 계속 종료되고 다시 시작하는 걸 반복한다.
+
+# 영상을 틀면 누가 그 영상을 올렸는지 확인하고 싶어
+  또한 해당 영상의 소유자가 아니면 이 두 버튼을 보이지 않게 만들거야.(영상을 업로드한 사람만이 수정과 삭제할 수 있잖아.)
+  이 말은 'video' 파일을 누가 업로드 했는지 알 수 있어야 하고 사용자는 자신이 업로드한 영상들을 볼 수 있어야 한다.
+  우리 'video'에는 'owner'항목이 없어 / user에는 'video list'를 추가해줄 필요가 있다.
+  'video'가 하나의 'owner'만 가지도록 만들어야 하고, 'user'는 여러개의 'video'를 가질 수 있도록 만들어야 한다.
+   
+
+
+

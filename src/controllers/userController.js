@@ -6,8 +6,9 @@ import { token } from "morgan";
 
 export const getJoin = (req, res) => {
     res.render("join", { pageTitle: "Join" });
-}
-export const postJoin = async(req, res) => {
+};
+
+export const postJoin = async(req, res) => { 
     const { name, username, email, password, password2, location } = req.body;
     const pageTitle = "Join"
     // password 와 password2 일치 확인.
@@ -27,16 +28,22 @@ export const postJoin = async(req, res) => {
             password,
             password2,
             location,
+            whereLogin: "Site"
         })
+        req.session.successMessage = "계정이 성공적으로 생성되었습니다.";
         return res.redirect("/login");
     } catch(error) {
         console.log(`❌ (postJoin)Server-Error : \n${ error }`);
         return res.status(400).render("Join", { pageTitle: "Join", errorMessage: error._message });
     }
-}
+};
+
 export const getLogin = (req, res) => {
-    res.render("login", { pageTitle: "Login" });
-}
+    const successMessage = req.session.successMessage;
+    delete req.session.successMessage;
+    res.render("login", { pageTitle: "Login", successMessage });
+};
+
 export const postLogin = async(req, res) => {
     const { username, password } = req.body;
     const pageTitle = "Login";
@@ -44,7 +51,7 @@ export const postLogin = async(req, res) => {
     // check if account exists
     if(!user) {
         const user2 = await User.findOne({ username: username, socialOnly: true })
-        console.log('user2 : ', user2);
+        // console.log('user2 : ', user2);
         if(user2) {
             return res.status(400).render("login", { pageTitle: pageTitle, errorMessage: `해당 계정은 ${user2.whereLogin}을 통해서 가입된 계정입니다. ${user2.whereLogin} 으로 로그인 부탁드립니다.` })
         }
@@ -58,7 +65,7 @@ export const postLogin = async(req, res) => {
     req.session.loggedIn = true;
     req.session.user = user;
     return res.redirect("/");
-}
+};
 
 export const startGithubLogin = (req, res) => {
     const baseUrl = "https://github.com/login/oauth/authorize";
@@ -72,6 +79,7 @@ export const startGithubLogin = (req, res) => {
     // console.log('START_FINAL_URL : ', finalUrl);
     return res.redirect(finalUrl);
 };
+
 export const finishGithubLogin = async(req, res) => {
     const baseUrl = "https://github.com/login/oauth/access_token";
     const config = {
@@ -100,7 +108,7 @@ export const finishGithubLogin = async(req, res) => {
                     Authorization: `Bearer ${access_token}`
                 }
             })).json();
-            console.log(userData);
+            // console.log(userData);
             const emailData = await(await fetch(`${apiUrl}/user/emails`, {
                 method: "GET",
                 headers: {
@@ -117,6 +125,7 @@ export const finishGithubLogin = async(req, res) => {
                 let user = await User.findOne({ email: emailObj.email });
                 // console.log('user : ', user);
                 if(!user) {
+                    // console.log("Github 계정 생성")
                     user = await User.create({
                         avatarUrl: userData.avatar_url,
                         name: userData.name ? userData.name : userData.login,
@@ -128,6 +137,7 @@ export const finishGithubLogin = async(req, res) => {
                         whereLogin: "Github",
                         location: userData.location ? userData.location : "Unknown",
                     });
+                    // console.log("user : ", user);
                 } 
                 req.session.loggedIn = true;
                 req.session.user = user;
@@ -135,10 +145,9 @@ export const finishGithubLogin = async(req, res) => {
             } else {
                 return res.redirect("/login");
             }
-        };
+};
         
 export const startNaverLogin = (req, res) => {
-    console.log("startNaverLogin Start");
     // 로그인 연동 URL 생성
     const apiUrl = "https://nid.naver.com/oauth2.0/authorize";
     const config = {
@@ -187,7 +196,7 @@ export const finishNaverLogin = async(req, res) => {
                 "Authorization": `Bearer ${access_token}`,
             },
         })).json();
-        console.log('userData : ', userData);
+        // console.log('userData : ', userData);
         let user = await User.findOne({ email: userData.response.email })
         if(!user) {
             user = await User.create({
@@ -208,31 +217,123 @@ export const finishNaverLogin = async(req, res) => {
         return res.redirect("/login");
     }
 };
-
-
-        
-        
+      
 export const getEdit = (req, res) => {
     return res.render("edit-profile", { pageTitle: "Edit Profile" })
-}
+};
+
 export const postEdit = async(req, res) => {
     // Case 1
     // const id = req.session.user._id;
     // Case 2
-    const { session: { user: { _id } } } = req;
-    const { name, email, username, location } = req.body;
-    await User.findByIdAndUpdate(id, {
+    const { 
+        session: { 
+            user: { 
+                _id,
+                avatarUrl,
+            } 
+        }, 
+        body: {
+            name, 
+            email, 
+            username, 
+            location 
+        },
+        file,
+    } = req; 
+    console.log("FILE : ", file);
+    const pageTitle = 'Edit Profile';
+    const user = await User.findById(_id);
+    // console.log("postEditUser : ", user);
+    if(user.socialOnly == true) {
+        return res.status(400).render("edit-profile", { 
+            pageTitle: "Edit Profile", 
+            errorMessage: `${user.whereLogin}을 통해 생성된 계정입니다. ${user.whereLogin}에서 수정해주세요.` 
+        })
+    }
+    const currentUser = req.session.user;
+    // console.log('currentUser : ', currentUser);
+    if (currentUser.email !== email && (await User.exists({ email }))) {
+        return res.status(400).render('edit-profile', {
+        pageTitle,
+        errorMessage: 'This email is already taken.',
+        });
+    }
+    if (currentUser.username !== username && (Boolean(await User.exists({ username })))) {
+        // console.log("현재 세션의 username과 입력한 username이 다르면서, 입력한 username이 존재한다면?")
+        return res.status(400).render('edit-profile', {
+        pageTitle,
+        errorMessage: 'This username is already taken.',
+        });
+    }
+    // console.log("Before Update");
+    const updatedUser = await User.findByIdAndUpdate(_id, {
+        avatarUrl: file ? file.path : avatarUrl,     
         name: name,
         email: email,
         username: username,
         location: location 
+    }, { 
+        new: true 
     })
-    return res.render("edit-profile")
-}
-export const see = (req, res) => {
-    res.send("See User");
-}
+    // Case 1
+    req.session.user = {
+        ...req.session.user,
+        avatarUrl: file ? file.path : avatarUrl,    
+        name: name,
+        email: email,
+        username: username,
+        location: location,
+    }
+    // Case 2
+    // req.session.user = updatedUser
+    // console.log("updatedUser : ", updatedUser);
+    return res.redirect("/users/edit");
+};
+
+export const getChangePassword = (req, res) => {
+    return res.render("./user/change-password", { 
+        pageTitle: "Change Password" 
+    })
+};
+
+export const postChangePassword = async(req, res ) => {
+    const { 
+        session: {
+            user: {_id, password},
+        },
+        body: { oldPassword, newPassword, newPasswordConfirmation } 
+    } = req;
+    const ok = await bcrypt.compare(oldPassword, password);
+    if(!ok) {
+        return res.status(400).render("user/change-password", {
+            pageTitle: "Change Password",
+            errorMessage: "The current password is incorrect"
+        })
+    }
+    ("user/change-password", { pageTitle: "Change Password", errorMessage: "The current password is incorrect" })
+    if(newPassword !== newPasswordConfirmation) {
+        // console.log("새로운 비밀번호 2차 검증")
+        return res.status(400).render("./user/change-password", { pageTitle: "Change Password", errorMessage: "The password does not match the confirmation." });
+    }
+    const user = await User.findById(_id);
+    user.password = newPassword;
+    await user.save(); 
+    req.session.user.password = user.password;
+    // send notification
+    return res.redirect("/users/logout");
+};
+
 export const logout = (req, res) => {
     req.session.destroy();
     return res.redirect("/");
-}
+};
+
+export const see = async(req, res) => {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if(!user) {
+        return res.status(404).render("404", { pageTitle: "User not found." });
+    }
+    return res.render("user/profile", { pageTitle: `${user.name}`, user })
+};
