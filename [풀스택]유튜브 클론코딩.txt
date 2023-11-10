@@ -615,3 +615,59 @@
 
 
 
+[ Webpack ]
+
+# 우리가 Babel Node를 썼기 때문에 우리는 우리가 원하는대로 코드를 써도 Node.js가 이해할거라고 확실할 수 있어
+  일너걸 프론트엔드 JavaScript에서도 해야해.
+  백엔드 JavaScript는 Babel Node가 다 처리해 줘.
+  하지만 프로트엔드 JavaScript도 그런 처리가 필요하다는 거지.
+
+# 예를 들어 내가 .scss 파일을 작성한다고 하자. 이건 Sassy CSS라는건데 나중에 더 보게 될거야.
+  하지만 이 파일을 이대로 둔다면 브라우저에서 받아들여지지 않아. 그래서 이걸 일반 css로 바꿀 필요가 있어.
+  일반 CSS는 브라우저가 이해할 수 있으니까.
+
+# 여러가지 멋있고 쿨하고 섹시한 JavaScript 기능들을 쓰고 싶은데
+  브라우저가 이해를 못 할 수도 있어. 아니면 크롬에선 잘 돌아가는데 파이어폭스나 사파리에서 이해를 못 할 수도 있고
+  그러니까 내가 지금 원하는 건 내가 프론트엔드에서 JavaScript 코드를 작성하면
+  모든 브라우저에서 인식 가능한 JavaScript 로 바꿔주는 뭔가가 필요하다는 거야. 그래서 우리에게 Webpack이 필요한 거야. 
+
+# 일단 Webpack을 설치부터 해야 해. 이거저것 설치를 할건데 이것들이 다 front-end 코드에 필요한 것들이야.
+  아무튼 우리는 Webpack이랑 Webpack CLI를 설치 할 거야
+  npm i webpack webpack-cli --save-dev
+
+# Webpack은 우리 파일들을 바꿔줄거야. 그게 전부야. 
+  아니다 "여기에 소스파일들이 있고 여기가 네(webpack)가 결과물을 보낼 폴더야."정도면 충분해
+
+# Webpack을 설정하기 위해서는 webpack.config.js 라는 파일을 생성해야 해.
+  참고로 이 파일은 굉장히 오래된 JavaScript 코드만 이해할 수 있어.
+  그리고 오래된 node.js 같은 경우엔 export default를 안쓰지 대신에 module.export를 써.  
+
+# Webpack configuration에는 두 가지 주의할게 있는데
+  이 두 가지는 반드시 해야하는, 필수적인 거야.
+  Entry는 우리가 처리하고자 하는 파일들이야.
+  src 안에 client 폴더를 생성하고
+  일면 우리는 client 폴더 안에 있는 코드들은 다 서버가 아니라 브라우저에서 실행될 거란걸 알 수 있지.
+  그리고 여기 client 폴더 안에 두 개의 폴더를 더 만들건데 하나는 javascript고, 다른 하나는 나중에 만들거야.
+
+# webpack을 실행시키기 위해서는 스크립트를 하나 만들어야 한다.
+  "assets": "webpack --config webpack.config.js"
+  npm run assets
+  configuration output 경로는 절대경로여야 해.
+
+# __dirname 은 Javascript가 제공하고 있는 상수야.
+
+# 우리는 이 코드에 호환성을 추가해야 된다. 
+  우리가 backend 코드를 babel을 이용해서 정리했듯이
+  프론트엔드 코드도 babel을 이용해서 처리할 수 있다는 말이다.
+  프론트엔드 코드 처리는 webpack.config.js에서 해야한다.
+
+# 하지만 그 전에, 우리는 rules라는 컨셉에 대해 이해하고 넘어가야 한다.
+  rules는 우리가 각각의 파일 종류에 따라 어떤 전환을 할 건지 결정하는거다.
+
+# babel-loader
+  npm install -D babel-loader
+
+# The 'mode' option has not been set, webpack will fallback to 'production' for this value.
+  우리가 해야 하는건 webpack한테 이 코드가 지금 개발중인지 아니면 완성품인지를 알려줘야 한다.
+  mode를 설정 안해주면 기본으로 webpack은 production mode로 설정이 될거고 그렇게 되면
+  코드들을 다 압축 할텐데 개발 중에는 이러지 않았으면 한다.
