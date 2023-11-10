@@ -11,12 +11,22 @@ const userSchema = new mongoose.Schema({
     password: { type: String },
     name: { type: String, required: true },
     location: String,
+    videos: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            required: true,
+            ref: "Video"
+        }
+    ]
 });
 
 userSchema.pre('save', async function() {
-    console.log("User password : ", this.password);
-    this.password = await bcrypt.hash(this.password, 5);
-    console.log("Hashed password", this.password);
+    // console.log('PRE_SAVE_HASH CALLBACK')
+    if(this.isModified("password")) {
+        // console.log("User password : ", this.password);
+        this.password = await bcrypt.hash(this.password, 5);
+        // console.log("Hashed password", this.password);
+    }
 })
 
 /** Video 모델 생성 / mongoose와 model 연결 */

@@ -591,7 +591,27 @@
   이 말은 'video' 파일을 누가 업로드 했는지 알 수 있어야 하고 사용자는 자신이 업로드한 영상들을 볼 수 있어야 한다.
   우리 'video'에는 'owner'항목이 없어 / user에는 'video list'를 추가해줄 필요가 있다.
   'video'가 하나의 'owner'만 가지도록 만들어야 하고, 'user'는 여러개의 'video'를 가질 수 있도록 만들어야 한다.
-   
+
+# 모델 스키마에서 object 타입을 작성할 경우에는 mongoose를 통해서 작성할 수 있지,
+  mongoose.Schema.Types.ObjectId
+  ref를 작성해야하는데 'mongoose'에게 owner에 id를 저장하겠다고 알려줘야하기 때문에
+
+# 로그인된 사람의 'id' 와 영상의 'owner' 의 'id' 가 일치하면 로그인 된 사용자가 이 영상의 주인이라는 말이다.
+
+# mongoose는 이 objectId 가 User 에서 오는걸 아니까 도와줄거야.
+  const video = await  Video.findById(id).populate("owner");
+  populate를 하면 'mongoose'가 'video'를 찾고 그 안에서 'owner'도 찾아줄거야.
+  'mongoose'는 'owner'가 'object ID'인 것을 알고 이 'id'가 'User'에서 온것임을 알지
+  'video'를 로드했을 때 User 정보도 얻을 수 있다. 
+  'id' 뿐만 아니라 모든 정보를 볼 수 있다는 건 정말 대단한 일이야.
+
+# userSchema.pre("save", async function() {
+    if (this.isModified("password")) {
+      this.password = await bcrypt.hash(this.password, 5);  
+    }
+  });
+  여기에서 this.isModified는 비밀번호가 수정될 때만 'hash'가 일어날거다.
+
 
 
 
